@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 
 /**
  * Created by lawrencew on 11/10/2015.
- * from tutorial https://www.youtube.com/watch?v=tsz-assb1X8
  */
 public class ChatClient {
 
