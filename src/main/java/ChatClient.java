@@ -1,12 +1,7 @@
-
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 /**
  * Created by lawrencew on 11/10/2015.
@@ -14,53 +9,36 @@ import java.io.InputStreamReader;
 public class ChatClient {
 
 
-    public static void main(String[] args) throws Exception{
-        new ChatClient("localhost",8000).run();
-    }
 
-    private final String host;
-    private final int port;
-    private boolean run = true;
-
-    public ChatClient(String host, int port)
+    public ChatClient() throws Exception
     {
-        this.host = host;
-        this.port = port;
-    }
+        final int port = 5000;
+        final String host = "localhost";
+        String clientName="";
+        boolean running = true;
 
+        Socket socket = new Socket(host,port);
+        BufferedReader bfClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter pW = new PrintWriter(socket.getOutputStream(),true);
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 
-
-    public void run() throws Exception
-    {
-        EventLoopGroup group = new NioEventLoopGroup();
-
-        try{
-            Bootstrap bootS = new Bootstrap().group(group).channel(NioSocketChannel.class).handler(new ChatClientInitializer());
-
-            Channel channel = bootS.connect(host,port).sync().channel();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-            while(run)
-            {
-                    String message = in.readLine();
-                    if(message.equals("quit"))
-                    {
-                        run=false;
-                    }
-                else {
-                        System.out.println("wrote something");
-                        channel.write(message + "\r\n");
-                    }
-
-            }
-
-        }
-        finally
+        while(running)
         {
-            group.shutdownGracefully();
+            String clientInput = bf.readLine();
+            if(clientInput.equals("exit"))
+            {
+                running=false;
+            }
+            else {
+                pW.println(clientName + ": " + clientInput);
+            }
         }
-        System.exit(0);
+
     }
 
+    public static void main(String[] args) throws Exception
+    {
+
+        new ChatClient();
+    }
 }
