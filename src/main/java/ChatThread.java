@@ -14,15 +14,11 @@ public class ChatThread extends Thread {
     String name;
     BufferedReader fromServer;
     Socket socket;
-    ChatThread(String name, Socket socket)
+    ChatThread(String name, Socket socket,final BufferedReader fromServer)
     {
         this.socket=socket;
         this.name=name;
-        try {
-            fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+       this.fromServer=fromServer;
     }
     public void run(){
         System.out.println("started");
