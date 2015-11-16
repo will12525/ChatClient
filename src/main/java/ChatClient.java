@@ -67,7 +67,7 @@ public class ChatClient {
             }
             else {
                 toServer.println(clientName + ": " + clientsInput);
-                System.out.println(fromServer.readLine());
+              //  System.out.println(fromServer.readLine());
             }
         }
 
