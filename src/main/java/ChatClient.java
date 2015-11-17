@@ -47,7 +47,7 @@ public class ChatClient extends Thread{
                 toServer.println(clientsInput);
             }
         }
-       System.exit(0);
+        System.exit(0);
     }
 
     public void run()
@@ -56,13 +56,15 @@ public class ChatClient extends Thread{
         while (true) {
             try {
                 if ((message = fromServer.readLine()) != null) {
-                    if(message.equals("stop"))
-                    {
-                        System.out.println("Server: Server closing");
-                        close();
-                    }
-                    else
-                    {
+                    if(message.length()>8) {
+                        if (message.substring(8).equals("stop") && message.substring(0, 6).equals("Server")) {
+                            System.out.println("Server: Server closing");
+                            close();
+                            System.exit(0);
+                        } else {
+                            System.out.println(message);
+                        }
+                    }else {
                         System.out.println(message);
                     }
                 }
@@ -75,7 +77,6 @@ public class ChatClient extends Thread{
     }
     public void close()
     {
-        System.out.println("I was clled");
         try {
             toServer.println("exit");
             fromServer.close();
@@ -83,7 +84,7 @@ public class ChatClient extends Thread{
             clientInput.close();
             socket.close();
             this.interrupt();
-            running = false;
+            System.exit(0);
         }catch (IOException e)
         {
 
